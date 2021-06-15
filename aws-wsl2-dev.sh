@@ -15,7 +15,7 @@ AWS_DEFAULTREGION="eu-west-2"
 AWS_DEFAULTOUTPUTFORMAT="yaml"
 GIT_TOKEN="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"
 
-# Update to latest version of WSL2 and install unzip
+# Update to latest version of WSL2, install unzip and build tools
 echo "Update/Upgrade Ubuntu..."
 sudo apt-get update && sudo apt-get upgrade -y
 sudo apt install unzip -y
@@ -71,11 +71,11 @@ sudo apt install jq -y
 # sudo apt update
 # sudo apt install python3.8
 
-#Install Package Installer for Python (PIP)
+# Install Package Installer for Python (PIP)
 echo "Installing PIP..."
 sudo apt install python3-pip -y
 
-#Install latest stable version of Git. Git is included with Ubuntu 20.04 distro but not latest version of Git.
+# Install latest stable version of Git. Git is included with Ubuntu 20.04 distro but not latest version of Git.
 echo "Installing latest version of Git..."
 sudo add-apt-repository ppa:git-core/ppa -y
 sudo apt update
@@ -92,7 +92,7 @@ echo "Memorise your passphrase as this can not be recovered. Leave blank for no 
 ssh-keygen -q -a 64 -b 4096 -t ed25519 -C $SSH_EMAIL -f ~/.ssh/github_ed25519
 
 PUBKEY=`cat ~/.ssh/github_ed25519.pub`
-TITLE=`hostname`
+TITLE=`hostname`-autogen
 RESPONSE=`curl -s -H "Authorization: token ${GIT_TOKEN}" \
   -X POST --data-binary "{\"title\":\"${TITLE}\",\"key\":\"${PUBKEY}\"}" \
   https://api.github.com/user/keys`
@@ -103,13 +103,13 @@ KEYID=`echo $RESPONSE \
 echo "SSH public key added succesfully to GitHub account. KeyID - " $KEYID
 
 # Add key to ssh-agent, install keychain (manager for ssh-agent) and add startup to bash profile.
-echo "Adding key to ssh-agent. Enter your passphrase."
 eval "$(ssh-agent -s)"
+echo "Adding key to ssh-agent. Enter your passphrase."
 ssh-add ~/.ssh/github_ed25519
 echo "Installing keychain..."
 sudo apt install keychain -y
 echo "Adding keychain to .profile for session autostart"
-echo '/usr/bin/keychain --nogui $HOME/.ssh/github_rsa' >> ~/.profile
+echo '/usr/bin/keychain --nogui $HOME/.ssh/github_ed25519' >> ~/.profile
 echo 'source $HOME/.keychain/$HOSTNAME-sh' >> ~/.profile
 
 # Change remote URL to SSH
@@ -118,12 +118,16 @@ echo 'source $HOME/.keychain/$HOSTNAME-sh' >> ~/.profile
 # Show remote repositories
 #git remote -v
 
-#Clone GitHub repository
+# Clone GitHub repository
 #git clone git@github.com:deanflyer/aws-wordpress.git
 
-#Install CloudFormation linter
+# Install CloudFormation linter via Brew instead of pip
+# Issue using pip3 to install cfn-lint due to conflict with aws-sam
 echo "Installing cfn-lint..."
-pip3 install cfn-linter
+#pip3 install cfn-linter
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+brew install cfn-lint
 
 #Install Node.js
 echo "Installing Node.js..."
