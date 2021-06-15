@@ -1,15 +1,24 @@
-#Add shell variables and input code here
-#Do not publish publicly until credentials are removed!
+# Shell script to setup development environment for AWS under WSL2 for Windows 10
+# Installs the following utilities: -
+# aws-cli, unzip, jq, pip, git, SSH for git, clone initial repo, cfn-lint, Node.js, cfn-diagram, AWS CDK
+# As of date 15/06/2021 Python 3.9 is not recommend, use Python 3.8 which is default installed version on Ubuntu 20.04 
+#
+# Git personal access token: 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
+# Thanks to Peter Sellars (github.com/petersellars) for the code to automate GitHub SSH key generation.
+
+# Variables
+# Do not publish publicly until credentials are removed!
 AWS_DEFAULTACCESSKEYID="AKIAUGWSEOMXAUNKDL42"
 AWS_DEFAULTSECRETACCESSKEY="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"
 AWS_DEFAULTREGION="eu-west-2"
 AWS_DEFAULTOUTPUTFORMAT="yaml"
+GIT_TOKEN="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"
 
-#Update to latest version of WSL2 and install unzip
+# Update to latest version of WSL2 and install unzip
 sudo apt-get update && sudo apt-get upgrade -y
 sudo apt install unzip -y
 
-#Install and configure AWS cli. Config file default location is ~/.aws/config
+# Install and configure AWS CLI. Config file default location is ~/.aws/config
 echo -n "Enter default Access Key ID, or press enter for default value ["$AWS_DEFAULTACCESSKEYID"]:"
 read AWS_INPUT_VARIABLE
 if [ -n "$AWS_INPUT_VARIABLE" ]
@@ -50,22 +59,39 @@ aws configure set aws_secret_access_key $AWS_DEFAULTSECRETACCESSKEY
 aws configure set default.region $AWS_DEFAULTREGION
 
 #Install JSON command line parser utility
-sudo apt install jq
+sudo apt install jq -y
 
 #Install Python - Check if really need to use deadsnakes ppa
-sudo apt install software-properties-common
-sudo add-apt-repository ppa:deadsnakes/ppa
-sudo apt update
-sudo apt install python3.8
+# sudo apt install software-properties-common
+# sudo add-apt-repository ppa:deadsnakes/ppa
+# sudo apt update
+# sudo apt install python3.8
 
 #Install Package Installer for Python (PIP)
-sudo apt install python3-pip
+sudo apt install python3-pip -y
 
-#Install Git
-sudo apt install git
-sudo pip3 install pre-commit #required??
+#Install latest stable version of Git. Git is included with Ubuntu 20.04 distro but not latest version of Git.
+sudo add-apt-repository ppa:git-core/ppa -y
+sudo apt update
+sudo apt install git -y
+#sudo pip3 install pre-commit
 
 #setup SSH for Git
+GIT_TOKEN="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"
+ssh-keygen -q -b 4096 -t rsa -N "" -f ~/.ssh/github_rsa
+PUBKEY=`cat ~/.ssh/github_rsa.pub`
+TITLE=`hostname`
+
+RESPONSE=`curl -s -H "Authorization: token ${GIT_TOKEN}" \
+  -X POST --data-binary "{\"title\":\"${TITLE}\",\"key\":\"${PUBKEY}\"}" \
+  https://api.github.com/user/keys`
+
+KEYID=`echo $RESPONSE \
+  | grep -o '\"id.*' \
+  | grep -o "[0-9]*" \
+  | grep -m 1 "[0-9]*"`
+
+
 ssh-keygen -t ed25519 -C your_email@example.com
 eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id_ed25519
