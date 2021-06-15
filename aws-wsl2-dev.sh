@@ -81,24 +81,15 @@ sudo add-apt-repository ppa:git-core/ppa -y
 sudo apt update
 sudo apt install git -y
 
-#setup SSH for Git
+# Setup SSH for Git. ssh-keygen will handle empty email/empty password conditions
 GIT_TOKEN="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"
 echo "SSH setup for GitHub"
 echo "Enter your email address (comment for SSH key)"
 read -p 'Email Address:' SSH_EMAIL
-echo "Enter SSH passphrase. This will be used to authenticate every time you start a new WSL2 session."
+echo "When prompted, enter your passphrase. This will be used to authenticate every time you start a new WSL2 session."
 echo "Memorise your passphrase as this can not be recovered. Leave blank for no passphrase"
-read -p -s 'Password:' SSH_PASSPHRASE
 
-if [ -n "$SSH_EMAIL" ]
-	then
-
-if [ -n "$SSH_PASSPHRASE" ]
-	then
-		ssh-keygen -q -a 64 -b 4096 -t ed25519 -C $SSH_EMAIL -N "" -f ~/.ssh/github_ed25519
-	else
-		ssh-keygen -q -a 64 -b 4096 -t ed25519 -C $SSH_EMAIL -N $SSH_PASSPHRASE -f ~/.ssh/github_ed25519
-fi
+ssh-keygen -q -a 64 -b 4096 -t ed25519 -C $SSH_EMAIL -f ~/.ssh/github_ed25519
 
 PUBKEY=`cat ~/.ssh/github_ed25519.pub`
 TITLE=`hostname`
@@ -113,7 +104,7 @@ echo "SSH public key added succesfully to GitHub account. KeyID - " $KEYID
 
 # Add key to ssh-agent, install keychain (manager for ssh-agent) and add startup to bash profile.
 eval "$(ssh-agent -s)"
-ssh-add ~/.ssh/id_ed25519
+ssh-add ~/.ssh/github_ed25519
 sudo apt install keychain -y
 echo '/usr/bin/keychain --nogui $HOME/.ssh/github_rsa' >> ~/.profile
 echo 'source $HOME/.keychain/$HOSTNAME-sh' >> ~/.profile
