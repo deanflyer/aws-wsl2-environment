@@ -122,7 +122,8 @@ echo 'source $HOME/.keychain/$HOSTNAME-sh' >> ~/.profile
 #git clone git@github.com:deanflyer/aws-wordpress.git
 
 # Install CloudFormation linter via Brew instead of pip
-# Issue using pip3 to install cfn-lint due to conflict with aws-sam
+# pip3 install conflicts with AWS SAM, get following error
+# ERROR: aws-sam-translator 1.36.0 has requirement six~=1.15, but you'll have six 1.14.0 which is incompatible.
 echo "Installing cfn-lint..."
 #pip3 install cfn-linter
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
