@@ -5,9 +5,9 @@ AWS_DEFAULTSECRETACCESSKEY="oKlCCeMq1FCaMI6xRPXtm4e5nC+0lvD7qW+kuMBb"
 AWS_DEFAULTREGION="eu-west-2"
 AWS_DEFAULTOUTPUTFORMAT="yaml"
 
-#Update to latest version of WSL2
-sudo apt update
-sudo apt upgrade
+#Update to latest version of WSL2 and install unzip
+sudo apt-get update && sudo apt-get upgrade -y
+sudo apt install unzip -y
 
 #Install and configure AWS cli. Config file default location is ~/.aws/config
 echo -n "Enter default Access Key ID, or press enter for default value ["$AWS_DEFAULTACCESSKEYID"]:"
@@ -48,7 +48,6 @@ sudo ./aws/install
 aws configure set aws_access_key_id $AWS_DEFAULTACCESSKEYID
 aws configure set aws_secret_access_key $AWS_DEFAULTSECRETACCESSKEY
 aws configure set default.region $AWS_DEFAULTREGION
-
 
 #Install JSON command line parser utility
 sudo apt install jq
