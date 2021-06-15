@@ -103,9 +103,12 @@ KEYID=`echo $RESPONSE \
 echo "SSH public key added succesfully to GitHub account. KeyID - " $KEYID
 
 # Add key to ssh-agent, install keychain (manager for ssh-agent) and add startup to bash profile.
+echo "Adding key to ssh-agent. Enter your passphrase."
 eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/github_ed25519
+echo "Installing keychain..."
 sudo apt install keychain -y
+echo "Adding keychain to .profile for session autostart"
 echo '/usr/bin/keychain --nogui $HOME/.ssh/github_rsa' >> ~/.profile
 echo 'source $HOME/.keychain/$HOSTNAME-sh' >> ~/.profile
 
@@ -125,6 +128,12 @@ pip3 install cfn-linter
 #Install Node.js
 echo "Installing Node.js..."
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+nvm install node --lts
+nvm use node --lts
 
 #Install cfn-diagram
 echo "Installing cfn-diagram..."
