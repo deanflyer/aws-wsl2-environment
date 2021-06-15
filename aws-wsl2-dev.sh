@@ -5,6 +5,7 @@
 #
 # Git personal access token: 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
 # Thanks to Peter Sellars (github.com/petersellars) for the code to automate GitHub SSH key generation.
+# https://gist.github.com/petersellars/c6fff3657d53d053a15e57862fc6f567
 
 # Variables
 # Do not publish publicly until credentials are removed!
@@ -15,10 +16,12 @@ AWS_DEFAULTOUTPUTFORMAT="yaml"
 GIT_TOKEN="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"
 
 # Update to latest version of WSL2 and install unzip
+echo "Update/Upgrade Ubuntu..."
 sudo apt-get update && sudo apt-get upgrade -y
 sudo apt install unzip -y
 
 # Install and configure AWS CLI. Config file default location is ~/.aws/config
+echo "Install and configure AWS CLI..."
 echo -n "Enter default Access Key ID, or press enter for default value ["$AWS_DEFAULTACCESSKEYID"]:"
 read AWS_INPUT_VARIABLE
 if [ -n "$AWS_INPUT_VARIABLE" ]
@@ -59,6 +62,7 @@ aws configure set aws_secret_access_key $AWS_DEFAULTSECRETACCESSKEY
 aws configure set default.region $AWS_DEFAULTREGION
 
 #Install JSON command line parser utility
+echo "Installing jq JSON parser..."
 sudo apt install jq -y
 
 #Install Python - Check if really need to use deadsnakes ppa
@@ -68,62 +72,79 @@ sudo apt install jq -y
 # sudo apt install python3.8
 
 #Install Package Installer for Python (PIP)
+echo "Installing PIP..."
 sudo apt install python3-pip -y
 
 #Install latest stable version of Git. Git is included with Ubuntu 20.04 distro but not latest version of Git.
+echo "Installing latest version of Git..."
 sudo add-apt-repository ppa:git-core/ppa -y
 sudo apt update
 sudo apt install git -y
-#sudo pip3 install pre-commit
 
 #setup SSH for Git
 GIT_TOKEN="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"
-ssh-keygen -q -b 4096 -t rsa -N "" -f ~/.ssh/github_rsa
-PUBKEY=`cat ~/.ssh/github_rsa.pub`
-TITLE=`hostname`
+echo "SSH setup for GitHub"
+echo "Enter your email address (comment for SSH key)"
+read -p 'Email Address:' SSH_EMAIL
+echo "Enter SSH passphrase. This will be used to authenticate every time you start a new WSL2 session."
+echo "Memorise your passphrase as this can not be recovered. Leave blank for no passphrase"
+read -p -s 'Password:' SSH_PASSPHRASE
 
+if [ -n "$SSH_EMAIL" ]
+	then
+
+if [ -n "$SSH_PASSPHRASE" ]
+	then
+		ssh-keygen -q -a 64 -b 4096 -t ed25519 -C $SSH_EMAIL -N "" -f ~/.ssh/github_ed25519
+	else
+		ssh-keygen -q -a 64 -b 4096 -t ed25519 -C $SSH_EMAIL -N $SSH_PASSPHRASE -f ~/.ssh/github_ed25519
+fi
+
+PUBKEY=`cat ~/.ssh/github_ed25519.pub`
+TITLE=`hostname`
 RESPONSE=`curl -s -H "Authorization: token ${GIT_TOKEN}" \
   -X POST --data-binary "{\"title\":\"${TITLE}\",\"key\":\"${PUBKEY}\"}" \
   https://api.github.com/user/keys`
-
 KEYID=`echo $RESPONSE \
   | grep -o '\"id.*' \
   | grep -o "[0-9]*" \
   | grep -m 1 "[0-9]*"`
+echo "SSH public key added succesfully to GitHub account. KeyID - " $KEYID
 
-
-ssh-keygen -t ed25519 -C your_email@example.com
+# Add key to ssh-agent, install keychain (manager for ssh-agent) and add startup to bash profile.
 eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id_ed25519
-sudo apt install keychain
-/usr/bin/keychain --nogui $HOME/.ssh/id_ed25519
-source $HOME/.keychain/$HOSTNAME-sh
+sudo apt install keychain -y
+echo '/usr/bin/keychain --nogui $HOME/.ssh/github_rsa' >> ~/.profile
+echo 'source $HOME/.keychain/$HOSTNAME-sh' >> ~/.profile
 
-#create code to deploy SSH key to github
-See https://gist.github.com/petersellars/c6fff3657d53d053a15e57862fc6f567
+# Change remote URL to SSH
+#git remote set-url origin git@github.com:USERNAME/REPOSITORY.git
 
-#change remote URL to SSH
-git remote set-url origin git@github.com:USERNAME/REPOSITORY.git
-
-#show remote repositories
-git remote -v
+# Show remote repositories
+#git remote -v
 
 #Clone GitHub repository
-git clone git@github.com:deanflyer/aws-wordpress.git
+#git clone git@github.com:deanflyer/aws-wordpress.git
 
 #Install CloudFormation linter
+echo "Installing cfn-lint..."
 pip3 install cfn-linter
 
 #Install Node.js
+echo "Installing Node.js..."
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
 
 #Install cfn-diagram
+echo "Installing cfn-diagram..."
 npm i -g @mhlabs/cfn-diagram
 
 #Install AWS CDK
+echo "Installing AWS CDK..."
 npm -g install typescript
 npm install -g aws-cdk
 
-code --install-extensions kddejong.vscode-cfn-lint
-code --install-extensions redhat.vscode-yaml
+#Install Visual Studio Code extensions
+#code --install-extensions kddejong.vscode-cfn-lint
+#code --install-extensions redhat.vscode-yaml
 
