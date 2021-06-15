@@ -38,8 +38,8 @@ echo -n "Enter default output format or press enter for default output (json, ya
 read AWS_INPUT_VARIABLE
 if [ -n "$AWS_INPUT_VARIABLE" ]
 	then
-		AWS_DEFAULTREGION=$AWS_INPUT_VARIABLE
-		echo "AWS default output has been changed to:" $AWS_DEFAULTREGION
+		AWS_DEFAULTOUTPUTFORMAT=$AWS_INPUT_VARIABLE
+		echo "AWS default output has been changed to:" $AWS_DEFAULTOUTPUTFORMAT
 fi
 
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
