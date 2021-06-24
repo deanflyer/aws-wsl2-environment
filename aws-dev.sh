@@ -99,8 +99,7 @@ sudo apt install git -y
 
 # Setup SSH for Git. ssh-keygen will handle empty email/empty password conditions
 echo -e "${BLUE_TEXT}Install and configure SSH for GitHub${GREEN_TEXT}"
-echo "Enter your email address (comment for SSH key)"
-read -p 'Email Address: ' SSH_EMAIL
+read -p "Enter your Email Address: " SSH_EMAIL
 echo "When prompted, enter your passphrase. This will be used to authenticate every time you start a new WSL2 session."
 echo "Memorise your passphrase as this can not be recovered. Leave blank for no passphrase"
 
@@ -114,8 +113,8 @@ RESPONSE=`curl -s -H "Authorization: token ${GIT_TOKEN}" \
   
 CURL_RESULT=$?
 if test "$CURL_RESULT" != "0"; then
-   echo -e"${RED_TEXT}curl command failed. Exit code: $CURL_RESULT. Script aborted."
-   exit 1
+	echo -e"${RED_TEXT}curl command failed. Exit code: $CURL_RESULT. Script aborted."
+	exit 1
 fi
 KEYID=`echo $RESPONSE \
   | grep -o '\"id.*' \
@@ -137,7 +136,7 @@ echo 'source $HOME/.keychain/$HOSTNAME-sh' >> ~/.profile
 # Install CloudFormation linter via Brew instead of pip
 # pip3 install conflicts with AWS SAM, get following error
 # ERROR: aws-sam-translator 1.36.0 has requirement six~=1.15, but you'll have six 1.14.0 which is incompatible.
-echo -e"${BLUE_TEXT}Installing cfn-lint...${GREEN_TEXT}"
+echo -e "${BLUE_TEXT}Installing cfn-lint...${GREEN_TEXT}"
 #pip3 install cfn-linter
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
