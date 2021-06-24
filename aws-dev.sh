@@ -137,20 +137,18 @@ echo 'source $HOME/.keychain/$HOSTNAME-sh' >> ~/.profile
 # pip3 install conflicts with AWS SAM, get following error
 # ERROR: aws-sam-translator 1.36.0 has requirement six~=1.15, but you'll have six 1.14.0 which is incompatible.
 echo -e "${BLUE_TEXT}Installing cfn-lint...${GREEN_TEXT}"
-#pip3 install cfn-linter
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 brew install cfn-lint
 
-#Install Node.js
+#Install Node.js see https://github.com/nvm-sh/nvm#installing-and-updating for details
 echo -e "${BLUE_TEXT}Installing Node.js...${GREEN_TEXT}"
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
-
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-nvm install node --lts
-nvm use node --lts
+nvm install node
+nvm use node
 
 #Install cfn-diagram
 echo -e "${BLUE_TEXT}Installing cfn-diagram...${GREEN_TEXT}"
