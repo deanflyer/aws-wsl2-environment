@@ -1,7 +1,7 @@
 # Shell script to setup development environment for AWS under WSL2 for Windows 10
 # Installs the following utilities: -
-# aws-cli, unzip, jq, pip, git, SSH for git, clone initial repo, cfn-lint, Node.js, cfn-diagram, AWS CDK
-# As of date 15/06/2021 Python 3.9 is not recommend, use Python 3.8 which is default installed version on Ubuntu 20.04 
+# aws-cli, unzip, jq, pip, git, SSH for git, cfn-lint, Node.js, cfn-diagram, AWS CDK
+# As of date 15/06/2021 Python 3.9 is not recommended, use Python 3.8 which is default installed version on Ubuntu 20.04 
 #
 # You will need a GitHub Access Token with admin:public_key permissions
 # Thanks to Peter Sellars (github.com/petersellars) for the code to automate GitHub SSH key generation.
