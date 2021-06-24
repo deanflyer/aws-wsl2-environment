@@ -22,16 +22,19 @@ AWS_DEFAULTSECRETACCESSKEY=$2
 AWS_DEFAULTREGION=$3
 AWS_DEFAULTOUTPUTFORMAT=$4
 GIT_TOKEN=$5
+
+#Terminal Colours
 BLUE_TEXT='\033[0;34m'
+GREEN_TEXT='\033[0;32m'
 RED_TEXT='\033[0;31m'
 
 # Update to latest version of Ubuntu/install unzip.
-echo -e "${BLUE_TEXT}Update/Upgrade Ubuntu..."
+echo -e "${BLUE_TEXT}Update/Upgrade Ubuntu...${GREEN_TEXT}"
 sudo apt-get update && sudo apt-get upgrade -y
 sudo apt install unzip -y
 
 # Install and configure AWS CLI. Config file default location is ~/.aws/config
-echo -e "${BLUE_TEXT}Install and configure AWS CLI..."
+echo -e "${BLUE_TEXT}Install and configure AWS CLI...${GREEN_TEXT}"
 echo -n "Enter default Access Key ID, or press enter for default value ["$AWS_DEFAULTACCESSKEYID"]:"
 read AWS_INPUT_VARIABLE
 if [ -n "$AWS_INPUT_VARIABLE" ]
@@ -72,22 +75,22 @@ aws configure set aws_secret_access_key $AWS_DEFAULTSECRETACCESSKEY
 aws configure set default.region $AWS_DEFAULTREGION
 
 #Install JSON command line parser utility
-echo -e "${BLUE_TEXT}Installing jq JSON parser..."
+echo -e "${BLUE_TEXT}Installing jq JSON parser...${GREEN_TEXT}"
 sudo apt install jq -y
 
 # Install Package Installer for Python (PIP)
-echo -e "${BLUE_TEXT}Installing Package Installer for Python(PIP)..."
+echo -e "${BLUE_TEXT}Installing Package Installer for Python(PIP)...${GREEN_TEXT}"
 sudo apt install python3-pip -y
 
 # Install latest stable version of Git. Git is included with Ubuntu 20.04 distro but not latest version of Git.
-echo -e "${BLUE_TEXT}Installing latest version of Git..."
+echo -e "${BLUE_TEXT}Installing latest version of Git...${GREEN_TEXT}"
 sudo add-apt-repository ppa:git-core/ppa -y
 sudo apt update
 sudo apt install git -y
 
 # Setup SSH for Git. ssh-keygen will handle empty email/empty password conditions
 GIT_TOKEN="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"
-echo -e "${BLUE_TEXT}Install and configure SSH for GitHub"
+echo -e "${BLUE_TEXT}Install and configure SSH for GitHub${GREEN_TEXT}"
 echo "Enter your email address (comment for SSH key)"
 read -p 'Email Address: ' SSH_EMAIL
 echo "When prompted, enter your passphrase. This will be used to authenticate every time you start a new WSL2 session."
@@ -110,11 +113,11 @@ KEYID=`echo $RESPONSE \
   | grep -o '\"id.*' \
   | grep -o "[0-9]*" \
   | grep -m 1 "[0-9]*"`
-echo -e "${BLUE_TEXT}SSH public key added succesfully to GitHub account. KeyID: $KEYID"
+echo -e "${BLUE_TEXT}SSH public key added succesfully to GitHub account. KeyID: $KEYID ${GREEN_TEXT}"
 
 # Add key to ssh-agent, install keychain (manager for ssh-agent) and add startup to bash profile.
 eval "$(ssh-agent -s)"
-echo -e "${BLUE_TEXT}Adding ssh-key to ssh-agent. 
+echo -e "${BLUE_TEXT}Adding ssh-key to ssh-agent.${GREEN_TEXT}" 
 echo "Enter your secret passphrase to authenticate."
 ssh-add ~/.ssh/github_ed25519
 echo "Installing keychain..."
@@ -126,14 +129,14 @@ echo 'source $HOME/.keychain/$HOSTNAME-sh' >> ~/.profile
 # Install CloudFormation linter via Brew instead of pip
 # pip3 install conflicts with AWS SAM, get following error
 # ERROR: aws-sam-translator 1.36.0 has requirement six~=1.15, but you'll have six 1.14.0 which is incompatible.
-echo -e"${BLUE_TEXT}Installing cfn-lint..."
+echo -e"${BLUE_TEXT}Installing cfn-lint...${GREEN_TEXT}"
 #pip3 install cfn-linter
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 brew install cfn-lint
 
 #Install Node.js
-echo -e "${BLUE_TEXT}Installing Node.js..."
+echo -e "${BLUE_TEXT}Installing Node.js...${GREEN_TEXT}"
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
 
 export NVM_DIR="$HOME/.nvm"
@@ -143,15 +146,15 @@ nvm install node --lts
 nvm use node --lts
 
 #Install cfn-diagram
-echo -e "${BLUE_TEXT}Installing cfn-diagram..."
+echo -e "${BLUE_TEXT}Installing cfn-diagram...${GREEN_TEXT}"
 npm i -g @mhlabs/cfn-diagram
 
 #Install AWS CDK
-echo -e "${BLUE_TEXT}Installing AWS CDK..."
+echo -e "${BLUE_TEXT}Installing AWS CDK...${GREEN_TEXT}"
 npm -g install typescript
 npm install -g aws-cdk
 
-echo -e "${BLUE_TEXT}Install complete. Please exit and restart shell to complete changes."
+echo -e "${BLUE_TEXT}Install complete. Please exit and restart shell to complete changes.${GREEN_TEXT}"
 exit 0
 
 
