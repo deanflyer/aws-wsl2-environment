@@ -9,12 +9,13 @@
 #
 # Usage:
 # Enter on command line as below or when prompted
-# ./aws-wsl2-dev.sh <aws-access-key-id> <aws-secret-access-key> <aws-default-region> <aws-default-output-format>
+# ./aws-wsl2-dev.sh <aws-access-key-id> <aws-secret-access-key> <aws-default-region> <aws-default-output-format> <github-access-token>
 #
 # <aws-access-key-id> - Your AWS Access key ID.
 # <aws-secret-access-key> - Your AWS Secret access key.
 # <aws-default-region> - AWS region you wish to set as default. i.e. us-east-1 (see https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-regions for full list).
 # <aws-default-output-format> - Default cli output format. Valid values are json, yaml, yaml-stream, text, table (see https://docs.aws.amazon.com/cli/latest/userguide/cli-usage-output-format.html for more details).
+# <github-access-token> - Token to allow creation of SSH key in GitHub. You can create this at https://github.com/settings/tokens
 #
 # Variables for AWS and Github credentials
 AWS_DEFAULTACCESSKEYID=$1
