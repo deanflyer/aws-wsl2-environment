@@ -15,7 +15,6 @@
 # <aws-default-region> - AWS region you wish to set as default. i.e. us-east-1 (see https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-regions for full list).
 # <aws-default-output-format> - Default cli output format. Valid values are json, yaml, yaml-stream, text, table (see https://docs.aws.amazon.com/cli/latest/userguide/cli-usage-output-format.html for more details).
 #
-#
 # Variables for AWS and Github credentials (store at your own risk!)
 # Will be set to command line arguments if entered (as described above)
 
