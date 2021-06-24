@@ -7,13 +7,13 @@
 # Thanks to Peter Sellars (github.com/petersellars) for the code to automate GitHub SSH key generation.
 # https://gist.github.com/petersellars/c6fff3657d53d053a15e57862fc6f567
 
-# Variables
-# Do not publish publicly until credentials are removed!
-AWS_DEFAULTACCESSKEYID="AKIAUGWSEOMXAUNKDL42"
-AWS_DEFAULTSECRETACCESSKEY="oKlCCeMq1FCaMI6xRPXtm4e5nC+0lvD7qW+kuMBb"
-AWS_DEFAULTREGION="eu-west-2"
+
+# Variables for AWS and Github credentials (use at your own risk!)
+AWS_DEFAULTACCESSKEYID=""
+AWS_DEFAULTSECRETACCESSKEY=""
+AWS_DEFAULTREGION=""
 AWS_DEFAULTOUTPUTFORMAT="yaml"
-GIT_TOKEN="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"
+GIT_TOKEN=""
 
 # Update to latest version of WSL2, install unzip and build tools
 echo "Update/Upgrade Ubuntu..."
@@ -85,7 +85,7 @@ sudo apt install git -y
 GIT_TOKEN="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"
 echo "SSH setup for GitHub"
 echo "Enter your email address (comment for SSH key)"
-read -p 'Email Address:' SSH_EMAIL
+read -p 'Email Address: ' SSH_EMAIL
 echo "When prompted, enter your passphrase. This will be used to authenticate every time you start a new WSL2 session."
 echo "Memorise your passphrase as this can not be recovered. Leave blank for no passphrase"
 
@@ -149,7 +149,4 @@ echo "Installing AWS CDK..."
 npm -g install typescript
 npm install -g aws-cdk
 
-#Install Visual Studio Code extensions
-#code --install-extensions kddejong.vscode-cfn-lint
-#code --install-extensions redhat.vscode-yaml
 
