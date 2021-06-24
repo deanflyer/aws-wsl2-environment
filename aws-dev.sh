@@ -68,6 +68,14 @@ if [ -n "$AWS_INPUT_VARIABLE" ]
 		echo "AWS default output has been changed to:" $AWS_DEFAULTOUTPUTFORMAT
 fi
 
+echo -n "Enter Git Personal Access Token to allow SSH key creation ["$GIT_TOKEN"]:"
+read AWS_INPUT_VARIABLE
+if [ -n "$AWS_INPUT_VARIABLE" ]
+	then
+		GIT_TOKEN=$AWS_INPUT_VARIABLE
+		echo "Git Token has been set to:" $GIT_TOKEN
+fi
+
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 unzip awscliv2.zip
 sudo ./aws/install
@@ -90,7 +98,6 @@ sudo apt update
 sudo apt install git -y
 
 # Setup SSH for Git. ssh-keygen will handle empty email/empty password conditions
-GIT_TOKEN="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"
 echo -e "${BLUE_TEXT}Install and configure SSH for GitHub${GREEN_TEXT}"
 echo "Enter your email address (comment for SSH key)"
 read -p 'Email Address: ' SSH_EMAIL
